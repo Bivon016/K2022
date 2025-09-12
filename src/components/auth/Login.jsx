@@ -1,32 +1,59 @@
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import "./loginsignup.css";
 
 const Login = () => {
+  const [phone, setPhone] = useState("");
+  const [password, setPassword] = useState("");
+  const phoneRegex = /^(?:\+254|254|0)7\d{8}$/;
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (!phoneRegex.test(phone)) {
+      alert("Please enter a valid Kenyan phone number");
+      return;
+    }
+
+    console.log("Phone:", phone, "Password:", password);
+  };
+
   return (
-    <div className="flex items-center justify-center h-screen">
-      <div className="bg-white shadow-md rounded-xl p-6 w-80">
-        <h1 className="text-xl font-bold mb-4 text-center">Login</h1>
+    <div className="myBody">
+      <div className="myForm">
+        <form onSubmit={handleSubmit}>
+          <div className="welcome">
+            <h1>Welcome Back</h1>
+            <p>Log in to manage your saving group</p>
+          </div>
 
-        <input
-          type="text"
-          placeholder="Username"
-          className="w-full border rounded-lg px-3 py-2 mb-3"
-        />
-        <input
-          type="password"
-          placeholder="Password"
-          className="w-full border rounded-lg px-3 py-2 mb-3"
-        />
+          <div className="login-details">
+            <input
+              type="text"
+              placeholder="Phone"
+              value={phone}
+              onChange={(e) => setPhone(e.target.value)}
+            />
+            <input
+              type="password"
+              placeholder="Password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+          </div>
 
-        <button className="w-full bg-blue-500 text-white rounded-lg py-2 hover:bg-blue-600 mb-3">
-          Login
-        </button>
+          <div className="forgot-password">
+            <a href="dc">forgot password?</a>
+          </div>
 
-        <p className="text-sm text-center">
-          Don’t have an account?{" "}
-          <Link to="/signup" className="text-blue-500 hover:underline">
-            Sign up
-          </Link>
-        </p>
+          <button type="submit">Log In</button>
+
+          <div className="signup-link">
+            <p>
+              Don’t have an account?{" "}
+              <Link to="/signup">Sign up here</Link>
+            </p>
+          </div>
+        </form>
       </div>
     </div>
   );
