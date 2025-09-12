@@ -1,37 +1,69 @@
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import "./loginsignup.css";
 
 const Signup = () => {
+  const [username, setUsername] = useState("");
+  const [phone, setPhone] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const phoneRegex = /^(?:\+254|254|0)7\d{8}$/;
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (!phoneRegex.test(phone)) {
+      alert("Please enter a valid Kenyan phone number");
+      return;
+    }
+
+    console.log("Username:", username, "Phone:", phone, "Email:", email, "Password:", password);
+  };
+
   return (
-    <div className="flex items-center justify-center h-screen">
-      <div className="bg-white shadow-md rounded-xl p-6 w-80">
-        <h1 className="text-xl font-bold mb-4 text-center">Sign Up</h1>
+    <div className="myBody">
+      <div className="myForm">
+        <form onSubmit={handleSubmit}>
+          <div className="welcome">
+            <h1>Create Account</h1>
+            <p>Sign up to join your saving group</p>
+          </div>
 
-        <input
-          type="text"
-          placeholder="Username"
-          className="w-full border rounded-lg px-3 py-2 mb-3"
-        />
-        <input
-          type="email"
-          placeholder="Email"
-          className="w-full border rounded-lg px-3 py-2 mb-3"
-        />
-        <input
-          type="password"
-          placeholder="Password"
-          className="w-full border rounded-lg px-3 py-2 mb-3"
-        />
+          <div className="login-details">
+            <input
+              type="text"
+              placeholder="Username"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+            />
+            <input
+              type="text"
+              placeholder="Phone"
+              value={phone}
+              onChange={(e) => setPhone(e.target.value)}
+            />
+            <input
+              type="email"
+              placeholder="Email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
+            <input
+              type="password"
+              placeholder="Password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+          </div>
 
-        <button className="w-full bg-green-500 text-white rounded-lg py-2 hover:bg-green-600 mb-3">
-          Sign Up
-        </button>
+          <button type="submit">Sign Up</button>
 
-        <p className="text-sm text-center">
-          Already have an account?{" "}
-          <Link to="/login" className="text-blue-500 hover:underline">
-            Login
-          </Link>
-        </p>
+          <div className="signup-link">
+            <p>
+              Already have an account?{" "}
+              <Link to="/login">Login here</Link>
+            </p>
+          </div>
+        </form>
       </div>
     </div>
   );
