@@ -1,5 +1,9 @@
+// src/pages/Signup.jsx
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { createUserWithEmailAndPassword } from "firebase/auth";
+import { doc, setDoc } from "firebase/firestore";
+import { auth, db } from "../../firebase";
 import "./loginsignup.css";
 
 const Signup = () => {
@@ -7,22 +11,52 @@ const Signup = () => {
   const [phone, setPhone] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const phoneRegex = /^(?:\+254|254|0)7\d{8}$/;
+  const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    if (!phoneRegex.test(phone)) {
-      alert("Please enter a valid Kenyan phone number");
-      return;
-    }
+const phoneRegex = /^(?:\+254|254|0)(?:7|1)\d{8}$/;
 
-    console.log("Username:", username, "Phone:", phone, "Email:", email, "Password:", password);
-  };
+
+  const handleSignup = async (e) => {
+  e.preventDefault();
+
+  if (!phoneRegex.test(phone)) {
+    alert("Please enter a valid Kenyan phone number");
+    return;
+  }
+
+  try {
+      const userCredential = await createUserWithEmailAndPassword(
+      auth,
+      email,
+      password
+    );
+    const user = userCredential.user;
+
+    // 2. Save extra info
+    await setDoc(doc(db, "users", user.uid), {
+      username,
+      phone,
+      email,
+    });
+
+    
+    setUsername("");
+    setPhone("");
+    setEmail("");
+    setPassword("");
+
+  
+    navigate("/login");
+  } catch (error) {
+    alert(error.message);
+  }
+};
+
 
   return (
     <div className="myBody">
       <div className="myForm">
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSignup}>
           <div className="welcome">
             <h1>Create Account</h1>
             <p>Sign up to join your saving group</p>

@@ -1,20 +1,25 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { signInWithEmailAndPassword } from "firebase/auth";
+import { auth } from "../../firebase";
 import "./loginsignup.css";
 
 const Login = () => {
-  const [phone, setPhone] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const phoneRegex = /^(?:\+254|254|0)7\d{8}$/;
+  const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!phoneRegex.test(phone)) {
-      alert("Please enter a valid Kenyan phone number");
-      return;
-    }
+    try {
+      await signInWithEmailAndPassword(auth, email, password);
+      // on success go to landing page
+      navigate("/");
+    } catch (error) {
+  console.error(error.code, error.message);
+  alert(`${error.code}: ${error.message}`);
+}
 
-    console.log("Phone:", phone, "Password:", password);
   };
 
   return (
@@ -28,10 +33,10 @@ const Login = () => {
 
           <div className="login-details">
             <input
-              type="text"
-              placeholder="Phone"
-              value={phone}
-              onChange={(e) => setPhone(e.target.value)}
+              type="email"
+              placeholder="Email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
             />
             <input
               type="password"
@@ -42,7 +47,7 @@ const Login = () => {
           </div>
 
           <div className="forgot-password">
-            <a href="dc">forgot password?</a>
+            <a href="#">forgot password?</a>
           </div>
 
           <button type="submit">Log In</button>
