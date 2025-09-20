@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { createUserWithEmailAndPassword } from "firebase/auth";
+import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { doc, setDoc } from "firebase/firestore";
-import { auth, db } from "../../config/firebaseCon"; // adjust path to your config
+import { auth, db } from "../../config/firebaseCon"; // adjust path
 import "./loginsignup.css";
 
 const Signup = () => {
@@ -42,7 +42,12 @@ const Signup = () => {
         password
       );
 
-      // Save user details in Firestore
+      // 🔹 Set displayName in Firebase Auth
+      await updateProfile(userCredential.user, {
+        displayName: username,
+      });
+
+      // 🔹 Save user details in Firestore
       await setDoc(doc(db, "users", userCredential.user.uid), {
         username,
         phone: formattedPhone,
@@ -51,7 +56,7 @@ const Signup = () => {
 
       console.log("User created:", userCredential.user);
 
-      navigate("login"); // redirect to homepage after signup
+      navigate("/login"); // ✅ fixed: added missing slash
     } catch (err) {
       setError(err.message);
       console.error("Signup error:", err.message);
