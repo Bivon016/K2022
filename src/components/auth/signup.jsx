@@ -51,7 +51,7 @@ const Signup = () => {
 
       console.log("User created:", userCredential.user);
 
-      navigate("/"); // redirect to homepage after signup
+      navigate("login"); // redirect to homepage after signup
     } catch (err) {
       setError(err.message);
       console.error("Signup error:", err.message);
