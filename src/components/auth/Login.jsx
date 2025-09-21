@@ -1,7 +1,11 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { signInWithEmailAndPassword } from "firebase/auth";
-import { auth } from "../../config/firebaseCon"; // adjust path to your firebase config
+import {
+  signInWithEmailAndPassword,
+  signInWithPopup,
+  GoogleAuthProvider,
+} from "firebase/auth";
+import { auth } from "../../config/firebaseCon"; // adjust path if needed
 import "./loginsignup.css";
 
 const Login = () => {
@@ -11,7 +15,21 @@ const Login = () => {
   const navigate = useNavigate();
 
   const phoneRegex = /^(?:\+254|254|0)7\d{8}$/;
+  const googleProvider = new GoogleAuthProvider();
 
+  // 🔹 Google sign in
+  const handleGoogleSignIn = async () => {
+    try {
+      const result = await signInWithPopup(auth, googleProvider);
+      console.log("Google user:", result.user);
+      navigate("/");
+    } catch (error) {
+      setError(error.message);
+      console.error("Google Sign In Error:", error.message);
+    }
+  };
+
+  // 🔹 Phone (pseudo-email) sign in
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
@@ -21,12 +39,12 @@ const Login = () => {
       return;
     }
 
-    // 🔹 Convert phone into a pseudo-email
+    // Convert phone into a pseudo-email
     const formattedPhone = phone.startsWith("0")
       ? `+254${phone.substring(1)}`
       : phone.startsWith("254")
       ? `+${phone}`
-      : phone; // ensures it’s always +2547xxxxxxx
+      : phone;
 
     const pseudoEmail = `${formattedPhone}@myapp.com`;
 
@@ -38,7 +56,7 @@ const Login = () => {
       );
 
       console.log("User logged in:", userCredential.user);
-      navigate("/"); // redirect to home page
+      navigate("/");
     } catch (err) {
       setError(err.message);
       console.error("Login error:", err.message);
@@ -72,12 +90,26 @@ const Login = () => {
           {error && <p style={{ color: "red" }}>{error}</p>}
 
           <div className="forgot-password">
-            <a href="#">forgot password?</a>
+            <a href="#">Forgot password?</a>
           </div>
 
-          <button type="submit">Log In</button>
+          <button type="submit" className="login-btn">
+            Log In
+          </button>
 
           <div className="signup-link">
+<button
+  type="button"
+  className="google-btn"
+  onClick={handleGoogleSignIn}
+>
+  <img
+    src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg"
+    alt="Google"
+    className="google-icon"
+  />
+  Continue with Google
+</button>
             <p>
               Don’t have an account? <Link to="/signup">Sign up here</Link>
             </p>

@@ -1,8 +1,13 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
+import {
+  createUserWithEmailAndPassword,
+  updateProfile,
+  signInWithPopup,
+  GoogleAuthProvider,
+} from "firebase/auth";
 import { doc, setDoc } from "firebase/firestore";
-import { auth, db } from "../../config/firebaseCon"; // adjust path
+import { auth, db } from "../../config/firebaseCon"; // adjust path if needed
 import "./loginsignup.css";
 
 const Signup = () => {
@@ -14,7 +19,29 @@ const Signup = () => {
   const navigate = useNavigate();
 
   const phoneRegex = /^(?:\+254|254|0)7\d{8}$/;
+  const googleProvider = new GoogleAuthProvider();
 
+  // 🔹 Google sign up
+  const handleGoogleSignIn = async () => {
+    try {
+      const result = await signInWithPopup(auth, googleProvider);
+
+      // Save user info in Firestore
+      await setDoc(doc(db, "users", result.user.uid), {
+        username: result.user.displayName || "",
+        phone: "", // Google won't give phone, leave blank or update later
+        email: result.user.email,
+      });
+
+      console.log("Google user created:", result.user);
+      navigate("/login");
+    } catch (error) {
+      setError(error.message);
+      console.error("Google Sign In Error:", error.message);
+    }
+  };
+
+  // 🔹 Phone signup
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
@@ -24,30 +51,30 @@ const Signup = () => {
       return;
     }
 
-    // 🔹 Normalize phone number to +254 format
+    // Normalize phone number to +254 format
     const formattedPhone = phone.startsWith("0")
       ? `+254${phone.substring(1)}`
       : phone.startsWith("254")
       ? `+${phone}`
       : phone;
 
-    // 🔹 Convert phone to pseudo email for Firebase Auth
+    // Convert phone to pseudo email
     const pseudoEmail = `${formattedPhone}@myapp.com`;
 
     try {
-      // Create account in Firebase Auth
+      // Create account
       const userCredential = await createUserWithEmailAndPassword(
         auth,
         pseudoEmail,
         password
       );
 
-      // 🔹 Set displayName in Firebase Auth
+      // Update profile with username
       await updateProfile(userCredential.user, {
         displayName: username,
       });
 
-      // 🔹 Save user details in Firestore
+      // Save user in Firestore
       await setDoc(doc(db, "users", userCredential.user.uid), {
         username,
         phone: formattedPhone,
@@ -55,8 +82,7 @@ const Signup = () => {
       });
 
       console.log("User created:", userCredential.user);
-
-      navigate("/login"); // ✅ fixed: added missing slash
+      navigate("/login");
     } catch (err) {
       setError(err.message);
       console.error("Signup error:", err.message);
@@ -105,7 +131,24 @@ const Signup = () => {
 
           {error && <p style={{ color: "red" }}>{error}</p>}
 
-          <button type="submit">Sign Up</button>
+          <button type="submit" className="signup-btn">
+            Sign Up
+          </button>
+
+          <div className="social">
+  <button
+  type="button"
+  className="google-btn"
+  onClick={handleGoogleSignIn}
+>
+  <img
+    src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg"
+    alt="Google"
+    className="google-icon"
+  />
+  Sign in with Google
+</button>
+          </div>
 
           <div className="signup-link">
             <p>
