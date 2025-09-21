@@ -1,0 +1,85 @@
+.dashboard {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  padding: 2rem 1rem;
+  background-color: #f4f6f8;
+  min-height: 100vh;
+  font-family: 'Segoe UI', Roboto, sans-serif;
+  align-items: center;
+}
+
+.card {
+  width: 90%;
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 0;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  overflow: hidden;
+  transition: box-shadow 0.2s ease;
+}
+
+.card:hover {
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+}
+
+.card-header {
+  background-color: #0052cc;
+  color: #fff;
+  padding: 0.75rem 1.2rem;
+  font-weight: 600;
+  font-size: 1rem;
+}
+
+.card-body {
+  padding: 1.2rem;
+  color: #333;
+  font-size: 0.95rem;
+}
+
+.profile-card .card-header {
+  background-color: #0052cc;
+}
+
+.savings-card .card-header {
+  background-color: #00875a;
+}
+
+.payout-card .card-header {
+  background-color: #ff8b00;
+}
+
+.notifications-card .card-header {
+  background-color: #172b4d;
+}
+
+.notifications-card ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.notifications-card li {
+  padding: 0.5rem 0;
+  border-bottom: 1px solid #e4e7eb;
+  font-size: 0.9rem;
+}
+
+.notifications-card li:last-child {
+  border-bottom: none;
+}
+
+button {
+  margin-top: 1rem;
+  padding: 0.5rem 1rem;
+  background-color: #0052cc;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+button:hover {
+  background-color: #003d99;
+}
