@@ -1,0 +1,53 @@
+/* General page styling */
+.page {
+  padding: 20px;
+  margin-top: 70px; /* to avoid overlap with navbar */
+  background-color: #f9f9f9;
+  min-height: 100vh;
+}
+
+/* Titles */
+.page-title {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 20px;
+  color: #333;
+}
+
+/* Card styling */
+.card {
+  background: #fff;
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  color: #555;
+}
+
+/* Navbar (shared styling) */
+.navbar {
+  background-color: #004aad;
+  padding: 15px 20px;
+  display: flex;
+  align-items: center;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+}
+
+.navbar a {
+  color: #fff;
+  margin-right: 20px;
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.3s;
+}
+
+.navbar a:hover {
+  color: #ffcc00;
+}
+
+.navbar .active {
+  border-bottom: 2px solid #ffcc00;
+}
