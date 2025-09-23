@@ -1,3 +1,6 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;600&display=swap');
+
+
 .myBody {
     display: flex;
     justify-content: center;
@@ -53,4 +56,52 @@
     text-decoration: none;
     font-size: 14px;
   }
+
+  .social {
+  margin-top: 30px;
+  display: flex;
+}
+
+.social div {
+  background: red;
+  width: 150px;
+  border-radius: 3px;
+  padding: 5px 10px 10px 5px;
+  background-color: rgba(255, 255, 255, 0.27);
+  color: var(--color-dark);
+  text-align: center;
+}
+
+.social div:hover {
+  background-color: rgba(255, 255, 255, 0.47);
+}
+
+.google-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+  padding: 10px;
+  background: white;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: 500;
+  color: #444;
+  margin-top: 15px;
+  transition: background 0.3s, border-color 0.3s;
+}
+
+.google-btn:hover {
+  background: #f7f7f7;
+  border-color: #999;
+}
+
+.google-icon {
+  width: 20px;
+  height: 20px;
+}
+
   
