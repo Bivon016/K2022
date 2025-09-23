@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-d
 import PrivateRoute from "./components/auth/PrivateRoute";
 import Login from "./components/auth/login"; 
 import Signup from "./components/auth/signup"; 
+import ResetPassword from "./components/auth/resetpassword";
 import Dashboard from "./components/home/dashboard";
 import Navbar from "./components/home/navbar";
 import "./App.css";
@@ -20,7 +21,7 @@ const App = () => {
           />
 
           <Route path="/login" element={<Login />} />
-          <Route path="/signup" element={<Signup />} />
+          <Route path="/signup" element={<Signup />} 
           
            
         </Routes>
