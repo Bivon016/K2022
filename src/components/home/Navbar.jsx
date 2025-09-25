@@ -21,10 +21,10 @@ const Navbar = () => {
         <Link to="/Dashboard">
           <MdDashboard /> Dashboard
         </Link>
-        <Link to="/Contributions">
+        <Link to="/contributions">
           <AiOutlineDollarCircle /> Contributions
         </Link>
-        <Link to="/payouts">
+        <Link to="/payout">
           <CiCalendarDate /> Payouts
         </Link>
         <Link to="/loans">
