@@ -1,0 +1,68 @@
+
+.loans-page {
+  background-color: #0F172A; 
+  min-height: 100vh;
+  font-family: 'Inter', Arial, sans-serif;
+  color: #f1f5f9;
+  padding: 20px;
+}
+
+.loans-page .container {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.loans-page .title h1 {
+  font-size: 1.8rem;
+  font-weight: 600;
+  color: #f1f5f9;
+  margin-bottom: 20px;
+}
+
+.loans-page .card-container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.loans-page .loans-card,
+.loans-page .repayment {
+  background-color: #1E293B;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+}
+
+.loans-page .loans-card h3,
+.loans-page .repayment h3 {
+  display: flex;
+  justify-content: space-between;
+  font-weight: 500;
+  margin: 8px 0;
+  color: #e2e8f0;
+}
+
+.loans-page .loans-card span,
+.loans-page .repayment span {
+  color: #94a3b8;
+  margin-right: 8px;
+}
+
+
+.loans-page .loans-card h3:nth-child(2) span + * {
+  background-color: #16a34a;
+  color: white;
+  padding: 2px 8px;
+  border-radius: 8px;
+  font-size: 0.85rem;
+}
+
+@media (min-width: 640px) {
+  .loans-page .card-container {
+    flex-direction: row;
+  }
+  .loans-page .loans-card,
+  .loans-page .repayment {
+    flex: 1;
+  }
+}
