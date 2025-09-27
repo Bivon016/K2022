@@ -1,19 +1,7 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { collection, getDocs } from "firebase/firestore";
+import { db } from "../../config/firebaseCon";
 import "./pages.css";
-
-const members = [
-  { id: 1, name: "Sophia Carter", amount: 168 },
-  { id: 2, name: "Ethan Bennett", amount: 168 },
-  { id: 3, name: "Olivia Hayes", amount: 168 },
-  { id: 4, name: "Noah Thompson", amount: 168 },
-  { id: 5, name: "Ava Mitchell", amount: 168 },
-  { id: 6, name: "Liam Foster", amount: 168 },
-  { id: 7, name: "Mia Johnson", amount: 168 },
-  { id: 8, name: "Daniel Smith", amount: 168 },
-  { id: 9, name: "Ella Brown", amount: 168 },
-  { id: 10, name: "James Wilson", amount: 168 },
-  { id: 11, name: "Grace Taylor", amount: 168 },
-];
 
 // Utility → add days to a date
 const addDays = (date, days) => {
@@ -40,7 +28,32 @@ const getCurrentWeekIndex = (startDate, totalMembers) => {
 };
 
 const Payout = () => {
-  const startDate = new Date("2025-09-27"); // static date (adjust manually if needed)
+  const [members, setMembers] = useState([]);
+
+  // static start date of the cycle
+  const startDate = new Date("2025-09-27");
+
+  useEffect(() => {
+    const fetchMembers = async () => {
+      try {
+        const querySnapshot = await getDocs(collection(db, "users"));
+        const users = querySnapshot.docs.map((doc, index) => ({
+          id: doc.id,
+          ...doc.data(),
+          amount: 168, // fixed payout amount
+          avatar: `https://i.pravatar.cc/150?img=${index + 10}`,
+        }));
+        setMembers(users);
+      } catch (error) {
+        console.error("Error fetching members:", error);
+      }
+    };
+    fetchMembers();
+  }, []);
+
+  if (members.length === 0) {
+    return <p>Loading members...</p>;
+  }
 
   // assign dates to members
   const scheduledMembers = members.map((m, i) => {
@@ -54,7 +67,7 @@ const Payout = () => {
   // figure out which member is active now
   const currentWeekIndex = getCurrentWeekIndex(startDate, members.length);
 
-  // reorder: active member first, then the rest
+  // reorder: active member first
   const orderedMembers = [
     ...scheduledMembers.slice(currentWeekIndex),
     ...scheduledMembers.slice(0, currentWeekIndex),
@@ -77,15 +90,12 @@ const Payout = () => {
             className={`schedule-item ${member.active ? "active" : ""}`}
           >
             <div className="avatar">
-              <img
-                src={`https://i.pravatar.cc/150?img=${member.id + 10}`}
-                alt={member.name}
-              />
+              <img src={member.avatar} alt={member.username} />
               {member.active && <span className="badge">This Week</span>}
             </div>
 
             <div className="member-info">
-              <h4>{member.name}</h4>
+              <h4>{member.username}</h4>
               <p>{member.date}</p>
             </div>
 
