@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { collection, getDocs } from "firebase/firestore";
 import { db } from "../../config/firebaseCon";
+import Loader from "../common/loader"; 
 import "./pages.css";
 
 // Utility → add days to a date
@@ -23,12 +24,13 @@ const formatDate = (date) => {
 const getCurrentWeekIndex = (startDate, totalMembers) => {
   const today = new Date();
   const diffDays = Math.floor((today - startDate) / (1000 * 60 * 60 * 24));
-  if (diffDays < 0) return 0; // before first payout → show first member
+  if (diffDays < 0) return 0; 
   return Math.min(Math.floor(diffDays / 7), totalMembers - 1);
 };
 
 const Payout = () => {
   const [members, setMembers] = useState([]);
+  const [loaded, setLoaded] = useState(false);
 
   // static start date of the cycle
   const startDate = new Date("2025-09-27");
@@ -40,10 +42,13 @@ const Payout = () => {
         const users = querySnapshot.docs.map((doc, index) => ({
           id: doc.id,
           ...doc.data(),
-          amount: 168, // fixed payout amount
+          amount: 168, 
           avatar: `https://i.pravatar.cc/150?img=${index + 10}`,
         }));
         setMembers(users);
+
+        // delay to allow fade-in
+        setTimeout(() => setLoaded(true), 300);
       } catch (error) {
         console.error("Error fetching members:", error);
       }
@@ -52,10 +57,9 @@ const Payout = () => {
   }, []);
 
   if (members.length === 0) {
-    return <p>Loading members...</p>;
+    return <Loader />;
   }
 
-  // assign dates to members
   const scheduledMembers = members.map((m, i) => {
     const payoutDate = addDays(startDate, i * 7);
     return {
@@ -64,20 +68,18 @@ const Payout = () => {
     };
   });
 
-  // figure out which member is active now
   const currentWeekIndex = getCurrentWeekIndex(startDate, members.length);
 
-  // reorder: active member first
   const orderedMembers = [
     ...scheduledMembers.slice(currentWeekIndex),
     ...scheduledMembers.slice(0, currentWeekIndex),
   ].map((m, i) => ({
     ...m,
-    active: i === 0, // first in reordered list is active
+    active: i === 0,
   }));
 
   return (
-    <div className="page">
+    <div className={`page fade-in ${loaded ? "show" : ""}`}>
       <h2 className="page-title">Payout Schedule</h2>
       <p className="subtitle">
         Each weekend, one member receives their payout in order.

@@ -4,6 +4,7 @@ import { onAuthStateChanged, signOut } from "firebase/auth";
 import { doc, onSnapshot } from "firebase/firestore";
 import { auth, db } from "../../config/firebaseCon";
 import { FaUserCircle } from "react-icons/fa";
+import Loader from "../common/loader"; 
 import "./Dashboard.css";
 
 const Dashboard = () => {
@@ -13,6 +14,7 @@ const Dashboard = () => {
   const [loan, setLoan] = useState(0);
   const [savings, setSavings] = useState(0);
   const [notifications, setNotifications] = useState([]);
+  const [loaded, setLoaded] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -39,6 +41,9 @@ const Dashboard = () => {
           }
         });
 
+        // delay to trigger fade-in
+        setTimeout(() => setLoaded(true), 300);
+
         return () => {
           unsubUser();
           unsubGroup();
@@ -56,48 +61,46 @@ const Dashboard = () => {
     navigate("/login");
   };
 
+  if (!user) {
+    return <Loader />;
+  }
+
   return (
-    <div className="dashboard">
-      {user ? (
-        <>
-          <div className="card profile-card">
-            <div className="card-header">Profile</div>
-            <div className="card-body">
-              <FaUserCircle size={60} color="#555" />
-              <p><strong>Name:</strong> {username}</p>
-              <p><strong>Email:</strong> {user.email}</p>
-              <p><strong>Role:</strong> {role}</p>
-              <p><strong>Loan:</strong> KES {loan}</p>
-            </div>
-          </div>
+    <div className={`dashboard fade-in ${loaded ? "show" : ""}`}>
+      <div className="card profile-card">
+        <div className="card-header">Profile</div>
+        <div className="card-body">
+          <FaUserCircle size={60} color="#555" />
+          <p><strong>Name:</strong> {username}</p>
+          <p><strong>Email:</strong> {user.email}</p>
+          <p><strong>Role:</strong> {role}</p>
+          <p><strong>Loan:</strong> KES {loan}</p>
+        </div>
+      </div>
 
-          <div className="card savings-card">
-            <div className="card-header">Group Savings</div>
-            <div className="card-body">
-              <p>KES {savings}</p>
-            </div>
-          </div>
+      <div className="card savings-card">
+        <div className="card-header">Group Savings</div>
+        <div className="card-body">
+          <p>KES {savings}</p>
+        </div>
+      </div>
 
-          <div className="card notifications-card">
-            <div className="card-header">Group Notifications</div>
-            <div className="card-body">
-              <ul>
-                {notifications.length > 0 ? (
-                  notifications.map((note, idx) => <li key={idx}>{note}</li>)
-                ) : (
-                  <li>No notifications</li>
-                )}
-              </ul>
-            </div>
-          </div>
+      <div className="card notifications-card">
+        <div className="card-header">Group Notifications</div>
+        <div className="card-body">
+          <ul>
+            {notifications.length > 0 ? (
+              notifications.map((note, idx) => <li key={idx}>{note}</li>)
+            ) : (
+              <li>No notifications</li>
+            )}
+          </ul>
+        </div>
+      </div>
 
-          <button className="logout-btn" onClick={handleLogout}>
-            Logout
-          </button>
-        </>
-      ) : (
-        <p>Loading…</p>
-      )}
+      <button className="logout-btn" onClick={handleLogout}>
+        Logout
+      </button>
     </div>
   );
 };
