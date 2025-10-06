@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { onAuthStateChanged, signOut } from "firebase/auth";
-import { doc, onSnapshot } from "firebase/firestore";
-import { auth, db } from "../../config/firebaseCon";
-import { FaUserCircle } from "react-icons/fa";
+import { onAuthStateChanged, signOut, updateProfile } from "firebase/auth";
+import { doc, onSnapshot, updateDoc } from "firebase/firestore";
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import { auth, db, storage } from "../../config/firebaseCon"; // make sure storage is exported from firebaseCon
 import Loader from "../common/loader"; 
 import "./Dashboard.css";
 
@@ -41,7 +41,6 @@ const Dashboard = () => {
           }
         });
 
-        // delay to trigger fade-in
         setTimeout(() => setLoaded(true), 300);
 
         return () => {
@@ -61,6 +60,26 @@ const Dashboard = () => {
     navigate("/login");
   };
 
+  // 🔹 Upload profile picture
+  const handleProfileUpload = async (file) => {
+    try {
+      const storageRef = ref(storage, `profilePics/${user.uid}`);
+      await uploadBytes(storageRef, file);
+      const url = await getDownloadURL(storageRef);
+
+      // update firebase auth profile
+      await updateProfile(auth.currentUser, { photoURL: url });
+
+      // also update firestore user doc
+      const userRef = doc(db, "users", user.uid);
+      await updateDoc(userRef, { photoURL: url });
+
+      setUser({ ...user, photoURL: url });
+    } catch (err) {
+      console.error("Profile upload failed:", err);
+    }
+  };
+
   if (!user) {
     return <Loader />;
   }
@@ -70,7 +89,28 @@ const Dashboard = () => {
       <div className="card profile-card">
         <div className="card-header">Profile</div>
         <div className="card-body">
-          <FaUserCircle size={60} color="#555" />
+          <div className="profile-pic-wrapper">
+            {user.photoURL ? (
+              <img src={user.photoURL} alt="Profile" className="profile-pic" />
+            ) : (
+              <div className="profile-placeholder">+</div>
+            )}
+            <label htmlFor="profile-upload" className="edit-btn">
+              ✎
+            </label>
+            <input
+              id="profile-upload"
+              type="file"
+              accept="image/*"
+              style={{ display: "none" }}
+              onChange={(e) => {
+                if (e.target.files[0]) {
+                  handleProfileUpload(e.target.files[0]);
+                }
+              }}
+            />
+          </div>
+
           <p><strong>Name:</strong> {username}</p>
           <p><strong>Email:</strong> {user.email}</p>
           <p><strong>Role:</strong> {role}</p>

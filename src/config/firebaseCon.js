@@ -9,7 +9,7 @@ const firebaseConfig = {
   authDomain: "k2022-7ce1e.firebaseapp.com",
   databaseURL: "https://k2022-7ce1e-default-rtdb.europe-west1.firebasedatabase.app",
   projectId: "k2022-7ce1e",
-  storageBucket: "k2022-7ce1e.firebasestorage.app",
+  storageBucket: "k2022-7ce1e.firebasestorage.app", 
   messagingSenderId: "246716820091",
   appId: "1:246716820091:web:bb32e98c5411dc637350de",
   measurementId: "G-FKHQH8K9B2"
