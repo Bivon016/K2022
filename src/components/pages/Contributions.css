@@ -1,0 +1,62 @@
+.container {
+  padding: 16px;
+  font-family: Arial, sans-serif;
+}
+
+.payment-weekly,
+.payment {
+  background: #f9f9f9;
+  padding: 16px;
+  border-radius: 8px;
+  margin-bottom: 16px;
+}
+
+h2 {
+  margin-bottom: 8px;
+}
+
+p {
+  margin-bottom: 12px;
+  color: #555;
+}
+
+.pay-btn {
+  background-color: #00b050;
+  color: #fff;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.pay-btn:hover {
+  background-color: #009045;
+}
+
+.history {
+  margin-top: 24px;
+}
+
+.history h3 {
+  margin-bottom: 12px;
+}
+
+.history-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 8px 0;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.amount {
+  font-weight: bold;
+}
+
+.status {
+  color: green;
+}
+
+.date {
+  color: #777;
+  font-size: 14px;
+}
